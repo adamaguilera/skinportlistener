@@ -1,5 +1,4 @@
-from typing import TypedDict
-
+from typing import TypedDict, Dict
 
 class SkinportJsonItem(TypedDict):
     market_hash_name: str
@@ -64,3 +63,84 @@ class SkinportItem:
         return self.skinport_item_json.get('updated_at')
 
 
+class SkinportEvent:
+    def __init__(self, event_data: Dict) -> None:
+        self.event_data = event_data
+        self.sales = [SkinportEventItem(sale) for sale in self.event_data.get('sales')]
+
+    @property
+    def event_type(self) -> str:
+        return self.event_data.get('eventType')
+
+
+class SkinportEventItem:
+    def __init__(self, sale_data: Dict) -> None:
+        self.sale_data = sale_data
+
+    @property
+    def id(self) -> int:
+        return self.sale_data.get('id')
+
+    @property
+    def sale_id(self) -> int:
+        return self.sale_data.get('saleId')
+
+    @property
+    def product_id(self) -> int:
+        return self.sale_data.get('productId')
+
+    @property
+    def assert_id(self) -> int:
+        return self.sale_data.get('assetId')
+
+    @property
+    def item_id(self) -> int:
+        return self.sale_data.get('itemId')
+
+    @property
+    def url(self) -> str:
+        return self.sale_data.get('url')
+
+    @property
+    def full_url(self) -> str:
+        return f'https://skinport.com/item/{self.url}/{self.sale_id}'
+
+    @property
+    def market_name(self) -> str:
+        return self.sale_data.get('marketName')
+
+    @property
+    def market_hash_name(self) -> str:
+        return self.sale_data.get('marketHashName')
+
+    @property
+    def suggested_price(self) -> int:
+        return self.sale_data.get('suggestedPrice')
+
+    @property
+    def sale_price(self) -> int:
+        return self.sale_data.get('salePrice')
+
+    @property
+    def currency(self) -> str:
+        return self.sale_data.get('currency')
+
+    def format_amount(self, amount) -> str:
+        symbol = '$' if self.currency == 'USD' else self.currency
+        return f'{symbol}{amount/100.0}'
+
+    @property
+    def wear(self) -> float:
+        return self.sale_data.get('wear')
+
+    @property
+    def exterior(self) -> str:
+        return self.sale_data.get('exterior')
+
+    @property
+    def stattrak(self) -> bool:
+        return self.sale_data.get('stattrak')
+
+    @property
+    def souvenir(self) -> str:
+        return self.sale_data.get('souvenir')
