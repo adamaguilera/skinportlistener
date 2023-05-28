@@ -12,7 +12,7 @@ async def on_sale_feed(data):
     if sale_event_data.event_type != 'listed':
         return
     for sale in sale_event_data.sales:
-        if sale.sale_price < sale.suggested_price:
+        if 'karambit' in sale.url and sale.sale_price < sale.suggested_price:
             message = f'Caught listing for {sale.market_hash_name} at ${sale.sale_price/100.0} with suggested ${sale.suggested_price/100.0}. Find this listing here {sale.full_url}'
             print(message)
             notification_service.push_message(message=message)
