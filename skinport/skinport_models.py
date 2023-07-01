@@ -1,5 +1,10 @@
 from typing import TypedDict, Dict
 
+
+def format_usd(amount_usd: float) -> str:
+    return '${:,.2f}'.format(amount_usd)
+
+
 class SkinportJsonItem(TypedDict):
     market_hash_name: str
     currency: str
@@ -118,16 +123,20 @@ class SkinportEventItem:
         return self.sale_data.get('suggestedPrice')
 
     @property
+    def suggested_price_formatted(self) -> str:
+        return format_usd(self.suggested_price / 100.0)
+
+    @property
     def sale_price(self) -> int:
         return self.sale_data.get('salePrice')
 
     @property
+    def sale_price_formatted(self) -> str:
+        return format_usd(self.sale_price / 100.0)
+
+    @property
     def currency(self) -> str:
         return self.sale_data.get('currency')
-
-    def format_amount(self, amount) -> str:
-        symbol = '$' if self.currency == 'USD' else self.currency
-        return f'{symbol}{amount/100.0}'
 
     @property
     def wear(self) -> float:
